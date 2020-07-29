@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby  #=> 'she-bang' execute everything below this in Ruby
+
+require_relative '../config/environment.rb'
+
+cli =CLI.new  #=> could also do class method, but convention is instance method
+cli.run
