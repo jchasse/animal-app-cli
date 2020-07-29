@@ -8,10 +8,12 @@ class API
 
         url = "http://www.itis.gov/ITISWebService/services/ITISService/searchByCommonName?srchKey=#{animal}"
         response = HTTParty.get(url)
-        binding.pry
-        data = {common_name: response["commonName"], tsn: response["tsn"])
-
+        
+        array = response["searchByCommonNameResponse"]['return']["commonNames"]
+        array.each do |animal|    # area to discuss in the technical blog
+            binding.pry
+            hash = {common_name: animal["commonName"], tsn: animal["tsn"]}
+            Animal.new(hash)
+        end
     end
-
-
 end

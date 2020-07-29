@@ -3,6 +3,8 @@
 class Animal
 
     def initialize(hash)
+
+    end
         
 
 

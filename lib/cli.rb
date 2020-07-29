@@ -12,7 +12,8 @@ class CLI
     end
 
     def confirm_common_name(animal)
-        hash = API.get_animal_tsn(animal)
+        API.get_animal_tsn(animal)
+
     end
 
 
