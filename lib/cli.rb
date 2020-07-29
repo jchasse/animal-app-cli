@@ -8,12 +8,11 @@ class CLI
         puts "Welcome!"
         puts "Please enter your favorite animal:"
         animal = gets.chomp
-        self.get_animal_info(animal)
+        self.confirm_common_name(animal)
     end
 
-    def get_animal_info(animal)
-        API.api_connect
-
+    def confirm_common_name(animal)
+        hash = API.get_animal_tsn(animal)
     end
 
 
