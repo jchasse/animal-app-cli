@@ -12,7 +12,6 @@ class CLI
     end
 
     def get_animal_tsn_by_input(animal)
-        
         response = API.get_animal_tsn(animal)
 
         array = response["searchByCommonNameResponse"]['return']["commonNames"]
@@ -20,19 +19,27 @@ class CLI
             hash = {common_name: animal["commonName"], tsn: animal["tsn"]}
             Animal.new(hash)
         end
+        self.list_animal_selection
+    end
+
+    def list_animal_selection
+        # insert if statement here to account for only 1 animal selection
+
+        Animal.all.each_with_index do |animal, index|
+            puts "#{index+1}. #{animal.common_name}"
+        end
         self.narrow_animal_selection
     end
 
     def narrow_animal_selection
-        # insert if statement here to account for only 1 animal selection
-        # binding.pry
-        Animal.all.each_with_index do |animal, index|
-            puts "#{index+1}. #{animal.common_name}"
-        end
+        puts "Please narrow your animal selection by entering the corresponding number:"
+        int = gets.chomp
         binding.pry
 
-        puts "Please narrow your animal selection by entering the corresponding number:"
-        
+        #enter in 2nd level deep question
+        tsn_selected = Animal.all[int.to_i].tsn
+
     end
+
 
 end
