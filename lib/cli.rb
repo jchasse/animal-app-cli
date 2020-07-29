@@ -11,7 +11,11 @@ class CLI
         self.get_animal_info(animal)
     end
 
-  
+    def get_animal_info(animal)
+        API.api_connect
+
+    end
+
 
 
 
