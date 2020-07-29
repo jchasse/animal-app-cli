@@ -8,15 +8,31 @@ class CLI
         puts "Welcome!"
         puts "Please enter your favorite animal:"
         animal = gets.chomp
-        self.confirm_common_name(animal)
+        self.get_animal_tsn_by_input(animal)
     end
 
-    def confirm_common_name(animal)
-        API.get_animal_tsn(animal)
+    def get_animal_tsn_by_input(animal)
+        
+        response = API.get_animal_tsn(animal)
 
+        array = response["searchByCommonNameResponse"]['return']["commonNames"]
+        array.each do |animal|    # area to discuss in the technical blog
+            hash = {common_name: animal["commonName"], tsn: animal["tsn"]}
+            Animal.new(hash)
+        end
+        self.narrow_animal_selection
     end
 
+    def narrow_animal_selection
+        # insert if statement here to account for only 1 animal selection
+        # binding.pry
+        Animal.all.each_with_index do |animal, index|
+            puts "#{index+1}. #{animal.common_name}"
+        end
+        binding.pry
 
-
+        puts "Please narrow your animal selection by entering the corresponding number:"
+        
+    end
 
 end
