@@ -4,6 +4,15 @@
 
 class CLI
 
+    def welcome
+        puts "Welcome!"
+        puts "Please enter your favorite animal:"
+        animal = gets.chomp
+        self.get_animal_info(animal)
+    end
+
+  
+
 
 
 end

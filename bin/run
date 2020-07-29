@@ -3,4 +3,4 @@
 require_relative '../config/environment.rb'
 
 cli =CLI.new  #=> could also do class method, but convention is instance method
-cli.run
+cli.welcome
