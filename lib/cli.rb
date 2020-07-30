@@ -5,7 +5,7 @@
 class CLI
 
     def welcome
-        puts "Welcome!\n\n"
+        puts "\nWelcome!\n\n"
         puts "Please enter your favorite animal:"
         animal = gets.chomp
         self.get_animal_tsn_by_input(animal)
@@ -54,7 +54,7 @@ class CLI
         puts "\nWhat would you like to learn about the #{cn_select}? (Enter corresponding number)"
         input = gets.chomp
         
-        detail_select = option_array[input.to_i-1].gsub(" ", "")
+        detail_select = option_array[input.to_i-1]
 
         self.get_animal_details_by_input(option_array, detail_select, tsn_select)
 
@@ -62,14 +62,19 @@ class CLI
 
     def get_animal_details_by_input(option_array, detail_select, tsn_select)
 
-        response = API.get_animal_details_by_tsn(detail_select, tsn_select)
+        response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
 
-        binding.pry
         option_array.each do |option|
-            detail_select == option
+            binding.pry
+            # if detail_select == option
+                Animal.all.each do |tsn_select|
+            #     puts "Hello"
+            #     binding.pry
 
-
-        sci_name = response["getScientificNameFromTSNResponse"]["return"]["combinedName"]
+            # end
+        end
+        
+        # sci_name = response["getScientificNameFromTSNResponse"]["return"]["combinedName"]
 
         # array = response["searchByCommonNameResponse"]['return']["commonNames"]
         # array.each do |animal|    # area to discuss in the technical blog
