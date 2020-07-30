@@ -61,7 +61,28 @@ class CLI
     end
 
 
-    def get_animal_details_by_input(option_array, detail_select, tsn_select)
+    def detail_input_split(option_array, detail_select, tsn_select)
+
+        if option_array == "Scientific Name"
+            self.get_animal_details_by_sci_name(tsn_select)
+        elsif option_array == "Full Hierarchy"
+            self.get_animal_details_by_full_hier(tsn_select)
+        elsif  option_array == "Comment Detail"
+            self.get_animal_details_by_comment(tsn_select)
+        end
+
+    end
+
+    # def get_animal_details_by_sci_name(tsn_select)
+
+
+    # end
+
+    # def 
+
+
+
+
 
 
 
