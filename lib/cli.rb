@@ -119,25 +119,26 @@ class CLI
     end
 
     def print_selected_string_details(string)
-
-        puts string
-
+        if string == nil 
+            puts "No comments logged yet on this species"
+        else
+            puts string
+        end
+        self.exit
     end
 
     def print_selected_array_details(array)
 
-        binding.pry
-
+       array.each do |hier|
+        # binding.pry
+        puts "#{hier["rankName"]}: #{hier["taxonName"]} "
+       end
+       self.exit
     end
 
-
-
-
-
-
-
-
-
+    def exit
+        self.abort("Thank you for learning with us!")
+    end
 
 
 
@@ -190,5 +191,5 @@ class CLI
         # sci_name = response["getScientificNameFromTSNResponse"]["return"]["combinedName"]
 
 
-    end
+    
 end
