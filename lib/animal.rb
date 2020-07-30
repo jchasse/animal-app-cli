@@ -18,5 +18,6 @@ class Animal
         @@all
     end
 
+    # def self.find_by_?
 
 end

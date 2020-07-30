@@ -35,12 +35,13 @@ class CLI
         puts "Please narrow your animal selection by entering the corresponding number:"
         int = gets.chomp
 
-        #does this count for a 2nd level deep question?
-        tsn_selected = Animal.all[int.to_i-1].tsn
+        tsn_select = Animal.all[int.to_i-1].tsn
+        # provide TSN back to user
+
         #Taxonomic Serial Number
-        API.get_animal_hierarchy_by_tsn(tsn_selected)
+        API.get_animal_hierarchy_by_tsn(tsn_select)
         #  returns hierarchy
-        API.get_animal_comments_by_tsn(tsn_selected)
+        API.get_animal_comments_by_tsn(tsn_select)
         # returns comments
 
 
