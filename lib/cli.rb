@@ -60,28 +60,69 @@ class CLI
 
     end
 
+
     def get_animal_details_by_input(option_array, detail_select, tsn_select)
 
-        response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
 
-        option_array.each do |option|
-            binding.pry
-            # if detail_select == option
-                Animal.all.each do |tsn_select|
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # def get_animal_details_by_input(option_array, detail_select, tsn_select)
+
+    #     response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
+
+    #     option_array.each do |option|
+    #         if option == "Scientific Name"
+    #             sci_name = response["getScientificNameFromTSNResponse"]["return"]["combinedName"]
+    #             # Animal.all.sci_name= sci_name
+    #         elsif option == "Full Hierarchy"
+    #             full_hier = response["getFullHierarchyFromTSNResponse"]["return"]["hierarchyList"]
+    #             # Animal.all.full_hier= full_hier
+    #         elsif option == "Comment Detail"
+    #             comment = response["getCommentDetailFromTSNResponse"]["return"]["comments"]
+    #             # Animal.all.comment= comment
+    #         end
+    #         binding.pry
+    #     end
+
+    #     Animal.all.each do |animal|
+    #         if animal_inst.tsn == tsn_select
+    #             if option == "Scientific Name"
+
+
+
+
+        # option_array.each do |option|
+        #     binding.pry
+        #     if detail_select == option
+        #         Animal.all.each do |animal_inst|
+        #             if animal_inst.tsn == tsn_select
+
+
             #     puts "Hello"
             #     binding.pry
+                # end
 
             # end
-        end
+        # end
         
         # sci_name = response["getScientificNameFromTSNResponse"]["return"]["combinedName"]
 
-        # array = response["searchByCommonNameResponse"]['return']["commonNames"]
-        # array.each do |animal|    # area to discuss in the technical blog
-        #     hash = {common_name: animal["commonName"], tsn: animal["tsn"]}
-        #     Animal.new(hash)
-        # end
-        # self.list_animal_selection
 
     end
 end
