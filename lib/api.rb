@@ -9,24 +9,25 @@ class API
         HTTParty.get(url) 
     end
 
-    def self.get_animal_hierarchy_by_tsn(tsn)
+    def self.get_animal_details_by_tsn(tsn)
         url = "http://www.itis.gov/ITISWebService/services/ITISService/getFullHierarchyFromTSN?tsn=#{tsn}"
         response = HTTParty.get(url) 
         # binding.pry
     end
 
-    def self.get_animal_comments_by_tsn(tsn)
+    # def self.get_animal_comments_by_tsn(tsn)
 
-        # Scientific Name
-        # url = "http://www.itis.gov/ITISWebService/services/ITISService/getScientificNameFromTSN?tsn=#{tsn}"
+    #     Scientific Name
+    #     url = "http://www.itis.gov/ITISWebService/services/ITISService/getScientificNameFromTSN?tsn=#{tsn}"
         
-        # Geo Coverage
-        # url = "http://www.itis.gov/ITISWebService/services/ITISService/getCoverageFromTSN?tsn=#{tsn}"
+    #     Geo Coverage
+    #     url = "http://www.itis.gov/ITISWebService/services/ITISService/getCoverageFromTSN?tsn=#{tsn}"
         
-        #Animal Comments
-         url = "http://www.itis.gov/ITISWebService/services/ITISService/getCommentDetailFromTSN?tsn=#{tsn}"
-        response = HTTParty.get(url)
-        binding.pry
-    end
+    #     Animal Comments
+    #      url = "http://www.itis.gov/ITISWebService/services/ITISService/getCommentDetailFromTSN?tsn=#{tsn}"
+    #     response = HTTParty.get(url)
+    #     puts "exit"
+
+    # end
 
 end

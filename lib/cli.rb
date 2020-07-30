@@ -34,20 +34,22 @@ class CLI
     def narrow_animal_selection
         puts "Please narrow your animal selection by entering the corresponding number:"
         int = gets.chomp
-
         tsn_select = Animal.all[int.to_i-1].tsn
-        # provide TSN back to user
+        cn_select = Animal.all[int.to_i-1].common_name
+        
+        puts "The Taxonomic Serial Number for #{cn_select} is #{tsn_select}."
+        puts "What would you like to learn about the #{cn_select}? (Enter corresponding number)"
 
-        #Taxonomic Serial Number
-        API.get_animal_hierarchy_by_tsn(tsn_select)
-        #  returns hierarchy
-        API.get_animal_comments_by_tsn(tsn_select)
-        # returns comments
+        option_array = ["Scientific Name", "Full Hierarchy", "Comment Detail"]
+        
+        option_array.each_with_index do |option|
+            puts "#{index+1}. #{option}"
+        end
+        int_d = gets.chomp
+        detail_select = option_array[int_d.to_i-1]
 
-
+        details = API.get_animal_details_by_tsn(detail_select, tsn_select)
+        binding.pry
+        
     end
-
-
-
-
 end
