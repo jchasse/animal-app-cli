@@ -6,7 +6,7 @@ class CLI
 
     def welcome
         puts "\nWelcome!\n\n"
-        puts "Please enter your favorite animal:"
+        puts "Please enter the common name of any living thing:"
         animal = gets.chomp
         self.get_animal_tsn_by_input(animal)
     end
@@ -120,7 +120,7 @@ class CLI
 
     def print_selected_string_details(string)
         if string == nil 
-            puts "No comments logged yet on this species"
+            puts "\nNo comments logged yet on this species"
         else
             puts string
         end
@@ -128,7 +128,7 @@ class CLI
     end
 
     def print_selected_array_details(array)
-
+        puts "\n"
        array.each do |hier|
         # binding.pry
         puts "#{hier["rankName"]}: #{hier["taxonName"]} "
@@ -137,59 +137,7 @@ class CLI
     end
 
     def exit
-        self.abort("Thank you for learning with us!")
+        abort("\nThank you for learning with us!\n\n")
     end
 
-
-
-
-
-
-
-
-
-
-    # def get_animal_details_by_input(option_array, detail_select, tsn_select)
-
-    #     response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
-
-    #     option_array.each do |option|
-    #         if option == "Scientific Name"
-    #             sci_name = response["getScientificNameFromTSNResponse"]["return"]["combinedName"]
-    #             # Animal.all.sci_name= sci_name
-    #         elsif option == "Full Hierarchy"
-    #             full_hier = response["getFullHierarchyFromTSNResponse"]["return"]["hierarchyList"]
-    #             # Animal.all.full_hier= full_hier
-    #         elsif option == "Comment Detail"
-    #             comment = response["getCommentDetailFromTSNResponse"]["return"]["comments"]
-    #             # Animal.all.comment= comment
-    #         end
-    #         binding.pry
-    #     end
-
-    #     Animal.all.each do |animal|
-    #         if animal_inst.tsn == tsn_select
-    #             if option == "Scientific Name"
-
-
-
-
-        # option_array.each do |option|
-        #     binding.pry
-        #     if detail_select == option
-        #         Animal.all.each do |animal_inst|
-        #             if animal_inst.tsn == tsn_select
-
-
-            #     puts "Hello"
-            #     binding.pry
-                # end
-
-            # end
-        # end
-        
-        # sci_name = response["getScientificNameFromTSNResponse"]["return"]["combinedName"]
-
-
-    
 end
