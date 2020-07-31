@@ -6,9 +6,6 @@ class CLI
 
     def welcome
         puts "\nWelcome!"
-        # puts "Please enter the common name of any living thing:"
-        # animal = gets.chomp
-        # self.get_animal_tsn_by_common_name(animal)
         self.run
     end
 
@@ -17,6 +14,7 @@ class CLI
         animal = gets.chomp
         self.get_animal_tsn_by_common_name(animal)
         self.list_animal_selection
+        self.narrow_animal_selection
     end
 
     def get_animal_tsn_by_common_name(animal)
@@ -48,8 +46,7 @@ class CLI
         Animal.all.each_with_index do |animal, index|
             puts "#{index+1}. #{animal.common_name}"
         end
-        # binding.pry
-        self.narrow_animal_selection
+        # self.narrow_animal_selection
     end
 
     def narrow_animal_selection
@@ -63,10 +60,17 @@ class CLI
         self.select_details(cn_select, tsn_select)
     end
 
+    def review_prior_called_animals
+        puts "\n"
+        Animal.all.each_with_index do |animal, index|
+            puts "#{index+1}. #{animal.common_name}"
+        end
+    end
+
 
     def select_details(cn_select,tsn_select)
 
-        option_array = ["Scientific Name", "Full Hierarchy", "Comment Detail"]
+        option_array = ["Scientific Name", "Full Hierarchy", "Publications"]
         
         option_array.each_with_index do |option, index|
             puts "#{index+1}. #{option}"
@@ -81,27 +85,10 @@ class CLI
 
     end
 
-
-    # def detail_input_split(detail_select, tsn_select)
-
-    #     #blog option to talk about route of nested if statements vs spliting off earlier
-
-    #     if detail_select == "Scientific Name"
-    #         # self.get_animal_details_by_sci_name(detail_select, tsn_select)
-    #         self.get_animal_details(detail_select, tsn_select)
-    #     elsif detail_select == "Full Hierarchy"
-    #         # self.get_animal_details_by_full_hier(detail_select, tsn_select)
-    #         self.get_animal_details(detail_select, tsn_select)
-    #     elsif  detail_select == "Comment Detail"
-    #         # self.get_animal_details_by_comment(detail_select, tsn_select)
-    #         self.get_animal_details(detail_select, tsn_select)
-    #     end
-
-    # end
-
     def get_animal_details(detail_select, tsn_select)
         response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
 
+        binding.pry
         if detail_select == "Scientific Name"
             value = response["getScientificNameFromTSNResponse"]["return"]["combinedName"]            
             attributes = {sci_name: value}
@@ -110,8 +97,8 @@ class CLI
             value = response["getFullHierarchyFromTSNResponse"]["return"]["hierarchyList"]
             attributes = {full_hier: value}
 
-        else  detail_select == "Comment Detail"
-            value = response["getCommentDetailFromTSNResponse"]["return"]["comments"]
+        else  detail_select == "Publications"
+            value = response["getPublicationsFromTSNResponse"]["return"]["publications"]
             attributes = {comment: value}
         end
 
@@ -120,71 +107,38 @@ class CLI
             animal.assign_attributes(attributes)
             end
         end
+        self.print_selected_details(detail_select, value)
     end
 
-
-
-    # def get_animal_details_by_sci_name(detail_select, tsn_select)
-    #     response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
-    #     sci_name = response["getScientificNameFromTSNResponse"]["return"]["combinedName"]
-
-    #     Animal.all.each do |animal|
-    #         if animal.tsn == tsn_select
-    #             animal.sci_name = sci_name
-    #         end
-    #     end
-
-    #     self.print_selected_string_details(sci_name)
-
-    # end
-
-
-    # def get_animal_details_by_full_hier(detail_select, tsn_select)
-    #     response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
-    #     full_hier = response["getFullHierarchyFromTSNResponse"]["return"]["hierarchyList"]
-
-    #     Animal.all.each do |animal|
-    #         if animal.tsn == tsn_select
-    #             animal.full_hier = full_hier
-    #         end
-    #     end
-
-    #     self.print_selected_array_details(full_hier)
-
-    # end
-
-    # # assign details // assign attributes with the send method // METAPROGRAMMING section
-
-    # def get_animal_details_by_comment(detail_select, tsn_select)
-    #     response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
-    #     comment = response["getCommentDetailFromTSNResponse"]["return"]["comments"]
-
-    #     Animal.all.each do |animal|
-    #         if animal.tsn == tsn_select
-    #             animal.comment = comment
-    #         end
-    #     end
-
-    #     self.print_selected_string_details(comment)
-
-    # end
-
-    def print_selected_string_details(string)
-        if string == nil 
-            puts "\nNo comments logged yet on this species"
-        else
-            puts string
-        end
-        self.exit
-    end
-
-    def print_selected_array_details(array)
-        puts "\n"
-       array.each do |hier|
+    def print_selected_details(detail_select, value)
         # binding.pry
-        puts "#{hier["rankName"]}: #{hier["taxonName"]} "
-       end
-       self.exit
+        if value == String 
+            puts value
+        elsif detail_select == "Full Hierarchy"
+            value.each do |hier|
+                puts "#{hier["rankName"]}: #{hier["taxonName"]} "
+            end
+        elsif detail_select == "Publications"
+            if value == nil
+                puts "No publications recorded in our database yet"
+
+            elsif value.class == Hash
+                puts "Publication: #{value["pubName"]}"
+                puts "Author: #{value["referenceAuthor"]}"
+                puts "Title: #{value["title"]}"
+                puts "Date: #{value["actualPubDate"]}"                
+
+            else
+                value.each do |pub|
+                    puts "Publication: #{pub["pubName"]}"
+                    puts "Author: #{pub["referenceAuthor"]}"
+                    puts "Title: #{pub["title"]}"
+                    puts "Date: #{pub["actualPubDate"]}"
+                end
+            end
+        else
+            # invalid_response_common_name
+        end
     end
 
     def exit
