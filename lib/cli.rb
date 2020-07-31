@@ -5,10 +5,18 @@
 class CLI
 
     def welcome
-        puts "\nWelcome!\n\n"
-        puts "Please enter the common name of any living thing:"
+        puts "\nWelcome!"
+        # puts "Please enter the common name of any living thing:"
+        # animal = gets.chomp
+        # self.get_animal_tsn_by_common_name(animal)
+        self.run
+    end
+
+    def run 
+        puts "\nPlease enter the common name of any living thing:"
         animal = gets.chomp
         self.get_animal_tsn_by_common_name(animal)
+        self.list_animal_selection
     end
 
     def get_animal_tsn_by_common_name(animal)
@@ -18,17 +26,20 @@ class CLI
         if array.class == Hash
             hash = {common_name: array["commonName"], tsn: array["tsn"]}
             Animal.new(hash)
+        elsif array == nil
+            invalid_response_common_name
         else
             array.each do |animal|    # area to discuss in the techical blog
                 hash = {common_name: animal["commonName"], tsn: animal["tsn"]}
                 Animal.new(hash)
             end
         end
-        self.list_animal_selection
+        # self.list_animal_selection
     end
 
-    def invalid_response
-
+    def invalid_response_common_name
+        puts "\nInvalid input."
+        self.run
     end
 
     def list_animal_selection
