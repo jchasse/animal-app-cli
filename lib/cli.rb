@@ -78,58 +78,79 @@ class CLI
         #blog option to talk about route of nested if statements vs spliting off earlier
 
         if detail_select == "Scientific Name"
-            self.get_animal_details_by_sci_name(detail_select, tsn_select)
+            # self.get_animal_details_by_sci_name(detail_select, tsn_select)
+            self.get_animal_details(detail_select, tsn_select)
         elsif detail_select == "Full Hierarchy"
-            self.get_animal_details_by_full_hier(detail_select, tsn_select)
+            # self.get_animal_details_by_full_hier(detail_select, tsn_select)
+            self.get_animal_details(detail_select, tsn_select)
         elsif  detail_select == "Comment Detail"
-            self.get_animal_details_by_comment(detail_select, tsn_select)
+            # self.get_animal_details_by_comment(detail_select, tsn_select)
+            self.get_animal_details(detail_select, tsn_select)
         end
 
     end
 
-    def get_animal_details_by_sci_name(detail_select, tsn_select)
+    def get_animal_details(detail_select, tsn_select)
         response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
-        sci_name = response["getScientificNameFromTSNResponse"]["return"]["combinedName"]
 
-        Animal.all.each do |animal|
-            if animal.tsn == tsn_select
-                animal.sci_name = sci_name
-            end
+        binding.pry
+        if detail_select == "Scientific Name"
+
+
+        elsif detail_select == "Full Hierarchy"
+
+        elsif  detail_select == "Comment Detail"
+
         end
-
-        self.print_selected_string_details(sci_name)
 
     end
 
-    def get_animal_details_by_full_hier(detail_select, tsn_select)
-        response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
-        full_hier = response["getFullHierarchyFromTSNResponse"]["return"]["hierarchyList"]
 
-        Animal.all.each do |animal|
-            if animal.tsn == tsn_select
-                animal.full_hier = full_hier
-            end
-        end
 
-        self.print_selected_array_details(full_hier)
+    # def get_animal_details_by_sci_name(detail_select, tsn_select)
+    #     response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
+    #     sci_name = response["getScientificNameFromTSNResponse"]["return"]["combinedName"]
 
-    end
+    #     Animal.all.each do |animal|
+    #         if animal.tsn == tsn_select
+    #             animal.sci_name = sci_name
+    #         end
+    #     end
 
-    # assign details // assign attributes with the send method // METAPROGRAMMING section
+    #     self.print_selected_string_details(sci_name)
 
-    def get_animal_details_by_comment(detail_select, tsn_select)
-        response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
-        comment = response["getCommentDetailFromTSNResponse"]["return"]["comments"]
+    # end
 
-        Animal.all.each do |animal|
-            if animal.tsn == tsn_select
-                animal.comment = comment
-            end
-        end
 
-        self.print_selected_string_details(comment)
+    # def get_animal_details_by_full_hier(detail_select, tsn_select)
+    #     response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
+    #     full_hier = response["getFullHierarchyFromTSNResponse"]["return"]["hierarchyList"]
 
-    end
+    #     Animal.all.each do |animal|
+    #         if animal.tsn == tsn_select
+    #             animal.full_hier = full_hier
+    #         end
+    #     end
+
+    #     self.print_selected_array_details(full_hier)
+
+    # end
+
+    # # assign details // assign attributes with the send method // METAPROGRAMMING section
+
+    # def get_animal_details_by_comment(detail_select, tsn_select)
+    #     response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
+    #     comment = response["getCommentDetailFromTSNResponse"]["return"]["comments"]
+
+    #     Animal.all.each do |animal|
+    #         if animal.tsn == tsn_select
+    #             animal.comment = comment
+    #         end
+    #     end
+
+    #     self.print_selected_string_details(comment)
+
+    # end
 
     def print_selected_string_details(string)
         if string == nil 

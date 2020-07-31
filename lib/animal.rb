@@ -22,7 +22,7 @@ class Animal
     end
 
     def assign_attributes(attributes)
-        attributes.each {|key, value| self.send(("#{key}="), value)}
+        attributes.each {|k, v| self.send(("#{k}="), v)}
   end
 
 # iteration over the animal class to assign/set attributes in here
