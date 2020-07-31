@@ -52,6 +52,9 @@ class CLI
     def narrow_animal_selection
         puts "\nPlease narrow your animal selection by entering the corresponding number:"
         input = gets.chomp
+
+        if input.to_i.between?(1,)
+
         tsn_select = Animal.all[input.to_i-1].tsn
         cn_select = Animal.all[input.to_i-1].common_name
         
@@ -88,7 +91,7 @@ class CLI
     def get_animal_details(detail_select, tsn_select)
         response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
 
-        binding.pry
+        # binding.pry
         if detail_select == "Scientific Name"
             value = response["getScientificNameFromTSNResponse"]["return"]["combinedName"]            
             attributes = {sci_name: value}
@@ -102,35 +105,34 @@ class CLI
             attributes = {comment: value}
         end
 
-        Animal.all.each do |animal|
-            if animal.tsn == tsn_select
-            animal.assign_attributes(attributes)
-            end
-        end
-        self.print_selected_details(detail_select, value)
+        animal = Animal.find_by_tsn(tsn_select)
+        animal.assign_attributes(attributes)
+
+        self.print_selected_details(detail_select, animal)
     end
 
-    def print_selected_details(detail_select, value)
-        # binding.pry
-        if value == String 
-            puts value
+    def print_selected_details(detail_select, animal)
+        if detail_select == "Scientific Name"
+            # binding.pry
+            puts "\n#{animal.sci_name}"
         elsif detail_select == "Full Hierarchy"
-            value.each do |hier|
+            puts "\n"
+            animal.full_hier.each do |hier|
                 puts "#{hier["rankName"]}: #{hier["taxonName"]} "
             end
         elsif detail_select == "Publications"
             if value == nil
                 puts "No publications recorded in our database yet"
 
-            elsif value.class == Hash
-                puts "Publication: #{value["pubName"]}"
+            elsif animal.publications.class == Hash
+                puts "\nPublication: #{value["pubName"]}"
                 puts "Author: #{value["referenceAuthor"]}"
                 puts "Title: #{value["title"]}"
                 puts "Date: #{value["actualPubDate"]}"                
 
             else
-                value.each do |pub|
-                    puts "Publication: #{pub["pubName"]}"
+                animal.publications.each do |pub|
+                    puts "\nPublication: #{pub["pubName"]}"
                     puts "Author: #{pub["referenceAuthor"]}"
                     puts "Title: #{pub["title"]}"
                     puts "Date: #{pub["actualPubDate"]}"
@@ -139,10 +141,33 @@ class CLI
         else
             # invalid_response_common_name
         end
+        new_search
     end
 
-    def exit
-        abort("\nThank you for learning with us!\n\n")
-    end
+    def new_search
+        puts "Enter 'new search', 'show prior species searched' or 'exit'"
+        input = gets.chomp
 
+        # what_next = ["New search", "Show prior species searched", "exit"]
+        # puts "\n"
+
+        # what_next.each_with_index do |option, index|
+        #     puts "#{index+1}. #{option}"
+        # end
+
+        # puts "\nWhat would you like to do next? (Enter corresponding number)"
+        # input = gets.chomp
+        
+        # option_select = option_array[input.to_i-1]
+
+        # binding.pry
+
+        if input = "new search"
+            self.run
+        elsif input = 'show prior species searched'
+            self.list_animal_selection
+        elsif input = 'exit'
+            abort("\nThank you for learning with us!\n\n")
+        end
+    end
 end
