@@ -8,18 +8,24 @@ class CLI
         puts "\nWelcome!\n\n"
         puts "Please enter the common name of any living thing:"
         animal = gets.chomp
-        self.get_animal_tsn_by_input(animal)
+        self.get_animal_tsn_by_common_name(animal)
     end
 
-    def get_animal_tsn_by_input(animal)
+    def get_animal_tsn_by_common_name(animal)
         response = API.get_animal_tsn(animal)
-
         array = response["searchByCommonNameResponse"]['return']["commonNames"]
-        array.each do |animal|    # area to discuss in the technical blog
+
+        # binding.pry
+
+        array.each do |animal|    # area to discuss in the techical blog
             hash = {common_name: animal["commonName"], tsn: animal["tsn"]}
             Animal.new(hash)
         end
         self.list_animal_selection
+    end
+
+    def invalid_response
+
     end
 
     def list_animal_selection
@@ -28,6 +34,7 @@ class CLI
         Animal.all.each_with_index do |animal, index|
             puts "#{index+1}. #{animal.common_name}"
         end
+        # binding.pry
         self.narrow_animal_selection
     end
 

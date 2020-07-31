@@ -17,6 +17,8 @@ class Animal
         @@all
     end
 
-    # def self.find_by_?
+    def self.find_by_tsn(tsn)
+        self.all.find {|animal| animal.tsn == tsn }
+    end
 
 end
