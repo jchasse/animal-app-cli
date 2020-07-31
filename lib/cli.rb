@@ -15,8 +15,6 @@ class CLI
         response = API.get_animal_tsn(animal)
         array = response["searchByCommonNameResponse"]['return']["commonNames"]
 
-        binding.pry
-
         if array.class == Hash
             hash = {common_name: array["commonName"], tsn: array["tsn"]}
             Animal.new(hash)
@@ -68,41 +66,49 @@ class CLI
         
         detail_select = option_array[input.to_i-1]
 
-        self.detail_input_split(detail_select, tsn_select)
+        self.get_animal_details(detail_select, tsn_select)
 
     end
 
 
-    def detail_input_split(detail_select, tsn_select)
+    # def detail_input_split(detail_select, tsn_select)
 
-        #blog option to talk about route of nested if statements vs spliting off earlier
+    #     #blog option to talk about route of nested if statements vs spliting off earlier
 
-        if detail_select == "Scientific Name"
-            # self.get_animal_details_by_sci_name(detail_select, tsn_select)
-            self.get_animal_details(detail_select, tsn_select)
-        elsif detail_select == "Full Hierarchy"
-            # self.get_animal_details_by_full_hier(detail_select, tsn_select)
-            self.get_animal_details(detail_select, tsn_select)
-        elsif  detail_select == "Comment Detail"
-            # self.get_animal_details_by_comment(detail_select, tsn_select)
-            self.get_animal_details(detail_select, tsn_select)
-        end
+    #     if detail_select == "Scientific Name"
+    #         # self.get_animal_details_by_sci_name(detail_select, tsn_select)
+    #         self.get_animal_details(detail_select, tsn_select)
+    #     elsif detail_select == "Full Hierarchy"
+    #         # self.get_animal_details_by_full_hier(detail_select, tsn_select)
+    #         self.get_animal_details(detail_select, tsn_select)
+    #     elsif  detail_select == "Comment Detail"
+    #         # self.get_animal_details_by_comment(detail_select, tsn_select)
+    #         self.get_animal_details(detail_select, tsn_select)
+    #     end
 
-    end
+    # end
 
     def get_animal_details(detail_select, tsn_select)
         response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
 
-        binding.pry
         if detail_select == "Scientific Name"
-
-
+            value = response["getScientificNameFromTSNResponse"]["return"]["combinedName"]            
+            attributes = {sci_name: value}
+            
         elsif detail_select == "Full Hierarchy"
+            value = response["getFullHierarchyFromTSNResponse"]["return"]["hierarchyList"]
+            attributes = {full_hier: value}
 
-        elsif  detail_select == "Comment Detail"
-
+        else  detail_select == "Comment Detail"
+            value = response["getCommentDetailFromTSNResponse"]["return"]["comments"]
+            attributes = {comment: value}
         end
 
+        Animal.all.each do |animal|
+            if animal.tsn == tsn_select
+            animal.assign_attributes(attributes)
+            end
+        end
     end
 
 

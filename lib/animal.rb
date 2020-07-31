@@ -23,7 +23,7 @@ class Animal
 
     def assign_attributes(attributes)
         attributes.each {|k, v| self.send(("#{k}="), v)}
-  end
+    end
 
 # iteration over the animal class to assign/set attributes in here
 
