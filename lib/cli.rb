@@ -15,11 +15,16 @@ class CLI
         response = API.get_animal_tsn(animal)
         array = response["searchByCommonNameResponse"]['return']["commonNames"]
 
-        # binding.pry
+        binding.pry
 
-        array.each do |animal|    # area to discuss in the techical blog
-            hash = {common_name: animal["commonName"], tsn: animal["tsn"]}
+        if array.class == Hash
+            hash = {common_name: array["commonName"], tsn: array["tsn"]}
             Animal.new(hash)
+        else
+            array.each do |animal|    # area to discuss in the techical blog
+                hash = {common_name: animal["commonName"], tsn: animal["tsn"]}
+                Animal.new(hash)
+            end
         end
         self.list_animal_selection
     end
@@ -110,6 +115,7 @@ class CLI
 
     end
 
+    # assign details // assign attributes with the send method // METAPROGRAMMING section
 
     def get_animal_details_by_comment(detail_select, tsn_select)
         response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)

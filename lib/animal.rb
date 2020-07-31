@@ -21,4 +21,10 @@ class Animal
         self.all.find {|animal| animal.tsn == tsn }
     end
 
+    def assign_attributes(attributes)
+        attributes.each {|key, value| self.send(("#{key}="), value)}
+  end
+
+# iteration over the animal class to assign/set attributes in here
+
 end
