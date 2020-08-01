@@ -70,7 +70,7 @@ class CLI
         end
     end
 
-    def select_details(cn_select,tsn_select)
+    def select_details(cn_select = "this species",tsn_select)
 
         option_array = ["Scientific Name", "Full Hierarchy", "Publications"]
         
@@ -100,7 +100,7 @@ class CLI
 
         else  detail_select == "Publications"
             value = response["getPublicationsFromTSNResponse"]["return"]["publications"]
-            attributes = {comment: value}
+            attributes = {publications: value}
         end
 
         animal = Animal.find_by_tsn(tsn_select)
@@ -111,48 +111,54 @@ class CLI
 
     def print_selected_details(detail_select, animal)
         if detail_select == "Scientific Name"
-            puts "\n#{animal.sci_name}"
+            puts "\nScientific Name: #{animal.sci_name}"
         elsif detail_select == "Full Hierarchy"
             puts "\n"
             animal.full_hier.each do |hier|
-                puts "#{hier["rankName"]}: #{hier["taxonName"]} "
+                puts "#{hier["rankName"]}: #{hier["taxonName"]}"
             end
         elsif detail_select == "Publications"
-            if value == nil
-                puts "No publications recorded in our database yet"
+            if animal.publications.class == Hash
+                puts "\nPublication: #{animal.publications["pubName"]}"
+                puts "Author: #{animal.publications["referenceAuthor"]}"
+                puts "Title: #{animal.publications["title"]}"
+                puts "Date: #{animal.publications["actualPubDate"]}"                
 
-            elsif animal.publications.class == Hash
-                puts "\nPublication: #{value["pubName"]}"
-                puts "Author: #{value["referenceAuthor"]}"
-                puts "Title: #{value["title"]}"
-                puts "Date: #{value["actualPubDate"]}"                
-
-            else
+            elsif animal.publications.class == Array
                 animal.publications.each do |pub|
                     puts "\nPublication: #{pub["pubName"]}"
                     puts "Author: #{pub["referenceAuthor"]}"
                     puts "Title: #{pub["title"]}"
                     puts "Date: #{pub["actualPubDate"]}"
                 end
+            else
+                puts "No publications recorded in our database yet"
             end
         else
             # invalid_response_common_name
         end
-        new_search
+        what_next?(animal)
     end
 
-    def new_search
+    def what_next?(animal)
         puts "\nEnter 'more info', 'new search', 'show prior species searched' or 'exit'"
         input = gets.chomp
 
         if input = "more info"
-            
-        if input = "new search"
-            self.run
-        elsif input = 'show prior species searched'
-            self.list_animal_selection
+            self.def select_details(animal.tsn)
+        # if input = "new search"
+        #     self.run
+        # elsif input = 'show prior species searched'
+        #     self.list_animal_selection
         elsif input = 'exit'
             abort("\nThank you for learning with us!\n\n")
+        else
+            self.invalid_input
+            self.what_next?(animal)
         end
+    end
+
+    def invalid_input
+        puts "Invalid response"
     end
 end

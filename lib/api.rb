@@ -1,4 +1,3 @@
-
 class API
 
     def self.get_animal_tsn(animal)
@@ -11,5 +10,4 @@ class API
         url = "http://www.itis.gov/ITISWebService/services/ITISService/get#{detail_type}FromTSN?tsn=#{tsn}"
         response = HTTParty.get(url) 
     end
-
 end
