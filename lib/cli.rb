@@ -1,10 +1,8 @@
-# Don't overuse instance variables, only when an 'attribute of an instance' truly needs to be stored
-# Interaction with user is in here
-# puts and gets here
-
 # git add .
 # git commit -m "   "
 # git push -u
+
+# add in search functionality so as to not repull info I already know
 
 class CLI
 
@@ -15,14 +13,12 @@ class CLI
 
     def run 
         puts "\nPlease enter the common name of any living thing:"
-        animal = gets.chomp
-        self.get_animal_tsn_by_common_name(animal)
-        # self.list_animal_selection
-        # self.narrow_animal_selection
+        input = gets.chomp
+        self.get_animal_tsn_by_common_name(input)
     end
 
-    def get_animal_tsn_by_common_name(animal)
-        response = API.get_animal_tsn(animal)
+    def get_animal_tsn_by_common_name(input)
+        response = API.get_animal_tsn(input)
         array = response["searchByCommonNameResponse"]['return']["commonNames"]
 
         if array.class == Hash
@@ -40,12 +36,12 @@ class CLI
     end
 
     def invalid_response_common_name
-        puts "\nInvalid input. Please make sure to input the common name"
+        puts "\nInvalid input. Please make sure to input the common name, not scientific name."
         self.run
     end
 
     def list_animal_selection
-        # insert if statement here to account for only 1 animal selection
+        # future functionality to skip over if only 1 common name response
         puts "\n"
         Animal.all.each_with_index do |animal, index|
             puts "#{index+1}. #{animal.common_name}"
@@ -54,6 +50,7 @@ class CLI
     end
 
     def narrow_animal_selection
+        
         puts "\nPlease narrow your animal selection by entering the corresponding number:"
         input = gets.chomp
         if input.to_i.between?(1,Animal.all.length)
@@ -70,7 +67,7 @@ class CLI
         end
     end
 
-    def select_details(cn_select = "this species",tsn_select)
+    def select_details(cn_select = "species",tsn_select)
 
         option_array = ["Scientific Name", "Full Hierarchy", "Publications"]
         
@@ -85,7 +82,6 @@ class CLI
         detail_select = option_array[input.to_i-1]
 
         self.get_animal_details(detail_select, tsn_select)
-
     end
 
     def get_animal_details(detail_select, tsn_select)
