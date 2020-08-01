@@ -1,7 +1,4 @@
 
-
-#get info from api / ask for data
-
 class API
 
     def self.get_animal_tsn(animal)

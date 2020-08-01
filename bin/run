@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby  #=> 'she-bang' execute everything below this in Ruby
+#!/usr/bin/env ruby  #=> 'sha-bang' execute everything below this in Ruby
 
 require_relative '../config/environment.rb'
 
