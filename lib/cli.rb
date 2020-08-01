@@ -62,7 +62,7 @@ class CLI
 
             self.select_details(cn_select, tsn_select)
         else
-            puts "Invalid entry."
+            self.invalid_input
             self.narrow_animal_selection
         end
     end
@@ -78,11 +78,30 @@ class CLI
 
         puts "\nWhat would you like to learn about the #{cn_select}? (Enter corresponding number)"
         input = gets.chomp
-        
-        detail_select = option_array[input.to_i-1]
-
+        if input.to_i.between?(1, option_array.length)
+            detail_select = option_array[input.to_i-1]
+        else
+            self.invalid_input
+            self.select_details(cn_select,tsn_select)
+        end
         self.get_animal_details(detail_select, tsn_select)
     end
+
+    def check_for_animal_data (detail_select, tsn_select)
+        if detail_select == "Scientific Name" && Animal.find_by_tsn(tsn_select).sci_name != nil
+            animal = Animal.find_by_tsn(tsn_select)
+            self.print_selected_details(detail_select, animal)
+        elsif detail_select == "Full Hierarchy" && Animal.find_by_tsn(tsn_select).full_hier != nil
+            animal = Animal.find_by_tsn(tsn_select)
+            self.print_selected_details(detail_select, animal)
+        elsif detail_select == "Publications" && Animal.find_by_tsn(tsn_select).publications != nil
+            animal = Animal.find_by_tsn(tsn_select)
+            self.print_selected_details(detail_select, animal)
+        else
+            self.get_animal_details(detail_select, tsn_select)
+        end
+    end
+
 
     def get_animal_details(detail_select, tsn_select)
         response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
@@ -90,7 +109,7 @@ class CLI
         if detail_select == "Scientific Name"
             value = response["getScientificNameFromTSNResponse"]["return"]["combinedName"]            
             attributes = {sci_name: value}
-            
+                
         elsif detail_select == "Full Hierarchy"
             value = response["getFullHierarchyFromTSNResponse"]["return"]["hierarchyList"]
             attributes = {full_hier: value}
@@ -157,7 +176,7 @@ class CLI
         elsif input == 'show prior search'
             self.list_animal_selection
         elsif input == 'exit'
-            sleep 2
+            sleep 1
             abort("\nThank you for learning with us!\n\n")
         else
             self.invalid_input
@@ -167,6 +186,6 @@ class CLI
 
     def invalid_input
         puts "\nInvalid input"
-        sleep 2
+        sleep 1
     end
 end
