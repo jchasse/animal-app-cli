@@ -2,6 +2,10 @@
 # Interaction with user is in here
 # puts and gets here
 
+# git add .
+# git commit -m "   "
+# git push -u
+
 class CLI
 
     def welcome
@@ -52,24 +56,19 @@ class CLI
     def narrow_animal_selection
         puts "\nPlease narrow your animal selection by entering the corresponding number:"
         input = gets.chomp
+        if input.to_i.between?(1,Animal.all.length)
 
-        if input.to_i.between?(1,)
+            tsn_select = Animal.all[input.to_i-1].tsn
+            cn_select = Animal.all[input.to_i-1].common_name
+            
+            puts "\nThank you, the Taxonomic Serial Number for the #{cn_select} is #{tsn_select}. \n\n"
 
-        tsn_select = Animal.all[input.to_i-1].tsn
-        cn_select = Animal.all[input.to_i-1].common_name
-        
-        puts "\nThank you, the Taxonomic Serial Number for the #{cn_select} is #{tsn_select}. \n\n"
-
-        self.select_details(cn_select, tsn_select)
-    end
-
-    def review_prior_called_animals
-        puts "\n"
-        Animal.all.each_with_index do |animal, index|
-            puts "#{index+1}. #{animal.common_name}"
+            self.select_details(cn_select, tsn_select)
+        else
+            puts "Invalid entry."
+            self.narrow_animal_selection
         end
     end
-
 
     def select_details(cn_select,tsn_select)
 
@@ -91,7 +90,6 @@ class CLI
     def get_animal_details(detail_select, tsn_select)
         response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
 
-        # binding.pry
         if detail_select == "Scientific Name"
             value = response["getScientificNameFromTSNResponse"]["return"]["combinedName"]            
             attributes = {sci_name: value}
@@ -113,7 +111,6 @@ class CLI
 
     def print_selected_details(detail_select, animal)
         if detail_select == "Scientific Name"
-            # binding.pry
             puts "\n#{animal.sci_name}"
         elsif detail_select == "Full Hierarchy"
             puts "\n"
@@ -145,23 +142,11 @@ class CLI
     end
 
     def new_search
-        puts "Enter 'new search', 'show prior species searched' or 'exit'"
+        puts "\nEnter 'more info', 'new search', 'show prior species searched' or 'exit'"
         input = gets.chomp
 
-        # what_next = ["New search", "Show prior species searched", "exit"]
-        # puts "\n"
-
-        # what_next.each_with_index do |option, index|
-        #     puts "#{index+1}. #{option}"
-        # end
-
-        # puts "\nWhat would you like to do next? (Enter corresponding number)"
-        # input = gets.chomp
-        
-        # option_select = option_array[input.to_i-1]
-
-        # binding.pry
-
+        if input = "more info"
+            
         if input = "new search"
             self.run
         elsif input = 'show prior species searched'
