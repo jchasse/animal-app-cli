@@ -1,9 +1,3 @@
-# git add .
-# git commit -m "   "
-# git push -u
-
-# add in search functionality so as to not repull info I already know
-
 class CLI
 
     def welcome
@@ -84,24 +78,25 @@ class CLI
             self.invalid_input
             self.select_details(cn_select,tsn_select)
         end
-        self.get_animal_details(detail_select, tsn_select)
+        self.check_for_animal_data(detail_select, tsn_select)
     end
 
-    def check_for_animal_data (detail_select, tsn_select)
+    def check_for_animal_data(detail_select, tsn_select)
         if detail_select == "Scientific Name" && Animal.find_by_tsn(tsn_select).sci_name != nil
-            animal = Animal.find_by_tsn(tsn_select)
-            self.print_selected_details(detail_select, animal)
+            self.animal_to_print(detail_select,tsn_select)
         elsif detail_select == "Full Hierarchy" && Animal.find_by_tsn(tsn_select).full_hier != nil
-            animal = Animal.find_by_tsn(tsn_select)
-            self.print_selected_details(detail_select, animal)
+            self.animal_to_print(detail_select,tsn_select)
         elsif detail_select == "Publications" && Animal.find_by_tsn(tsn_select).publications != nil
-            animal = Animal.find_by_tsn(tsn_select)
-            self.print_selected_details(detail_select, animal)
+            self.animal_to_print(detail_select,tsn_select)
         else
             self.get_animal_details(detail_select, tsn_select)
         end
     end
 
+    def animal_to_print(detail_select,tsn_select)
+        animal = Animal.find_by_tsn(tsn_select)
+        self.print_selected_details(detail_select, animal)
+    end
 
     def get_animal_details(detail_select, tsn_select)
         response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
