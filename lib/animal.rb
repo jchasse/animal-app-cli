@@ -22,4 +22,8 @@ class Animal
     def assign_attributes(attributes)
         attributes.each {|k, v| self.send(("#{k}="), v)}
     end
+
+    def self.clear
+        @@all.clear
+    end
 end

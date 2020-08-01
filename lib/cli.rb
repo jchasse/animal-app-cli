@@ -17,8 +17,8 @@ class CLI
         puts "\nPlease enter the common name of any living thing:"
         animal = gets.chomp
         self.get_animal_tsn_by_common_name(animal)
-        self.list_animal_selection
-        self.narrow_animal_selection
+        # self.list_animal_selection
+        # self.narrow_animal_selection
     end
 
     def get_animal_tsn_by_common_name(animal)
@@ -36,11 +36,11 @@ class CLI
                 Animal.new(hash)
             end
         end
-        # self.list_animal_selection
+        self.list_animal_selection
     end
 
     def invalid_response_common_name
-        puts "\nInvalid input."
+        puts "\nInvalid input. Please make sure to input the common name"
         self.run
     end
 
@@ -50,7 +50,7 @@ class CLI
         Animal.all.each_with_index do |animal, index|
             puts "#{index+1}. #{animal.common_name}"
         end
-        # self.narrow_animal_selection
+        self.narrow_animal_selection
     end
 
     def narrow_animal_selection
@@ -61,7 +61,7 @@ class CLI
             tsn_select = Animal.all[input.to_i-1].tsn
             cn_select = Animal.all[input.to_i-1].common_name
             
-            puts "\nThank you, the Taxonomic Serial Number for the #{cn_select} is #{tsn_select}. \n\n"
+            puts "\nThank you, the Taxonomic Serial Number for the #{cn_select} is #{tsn_select}."
 
             self.select_details(cn_select, tsn_select)
         else
@@ -74,6 +74,7 @@ class CLI
 
         option_array = ["Scientific Name", "Full Hierarchy", "Publications"]
         
+        puts "\n"
         option_array.each_with_index do |option, index|
             puts "#{index+1}. #{option}"
         end
@@ -112,11 +113,19 @@ class CLI
     def print_selected_details(detail_select, animal)
         if detail_select == "Scientific Name"
             puts "\nScientific Name: #{animal.sci_name}"
+        
         elsif detail_select == "Full Hierarchy"
             puts "\n"
-            animal.full_hier.each do |hier|
-                puts "#{hier["rankName"]}: #{hier["taxonName"]}"
+            if animal.full_hier.class == Hash
+                puts "#{animal.full_hier["rankName"]}: #{animal.full_hier["taxonName"]}"
+            elsif animal.full_hier.class == Array
+                animal.full_hier.each do |hier|
+                    puts "#{hier["rankName"]}: #{hier["taxonName"]}"
+                end
+            else
+                puts "\nThis input resulted in an error in pulling from our database."
             end
+ 
         elsif detail_select == "Publications"
             if animal.publications.class == Hash
                 puts "\nPublication: #{animal.publications["pubName"]}"
@@ -132,25 +141,27 @@ class CLI
                     puts "Date: #{pub["actualPubDate"]}"
                 end
             else
-                puts "No publications recorded in our database yet"
+                puts "\nNo publications recorded in our database yet"
             end
         else
-            # invalid_response_common_name
+            self.invalid_input
         end
         what_next?(animal)
     end
 
     def what_next?(animal)
-        puts "\nEnter 'more info', 'new search', 'show prior species searched' or 'exit'"
+        puts "\nEnter 'more info', 'new search', 'show prior search' or 'exit'"
         input = gets.chomp
 
-        if input = "more info"
+        if input == "more info"
             self.def select_details(animal.tsn)
-        # if input = "new search"
-        #     self.run
-        # elsif input = 'show prior species searched'
-        #     self.list_animal_selection
-        elsif input = 'exit'
+        elsif input == "new search"
+            Animal.clear
+            self.run
+        elsif input == 'show prior search'
+            self.list_animal_selection
+        elsif input == 'exit'
+            sleep 2
             abort("\nThank you for learning with us!\n\n")
         else
             self.invalid_input
@@ -159,6 +170,7 @@ class CLI
     end
 
     def invalid_input
-        puts "Invalid response"
+        puts "\nInvalid input"
+        sleep 2
     end
 end
