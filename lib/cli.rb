@@ -36,10 +36,22 @@ class CLI
 
     def list_animal_selection
         puts "\n"
-        Animal.all.each_with_index do |animal, index|
-            puts "#{index+1}. #{animal.common_name}"
+        animal_common_names = []
+        Animal.all.each do |animal|
+            animal_common_names << animal.common_name
         end
+
+        animal_common_names.sort.each_with_index do |animal, index|
+                puts "#{index+1}. #{animal}"
+        end
+
         self.narrow_animal_selection
+
+        # puts "\n"
+        # Animal.all.each_with_index do |animal, index|
+        #     puts "#{index+1}. #{animal.common_name}"
+        # end
+        # self.narrow_animal_selection
     end
 
     def narrow_animal_selection
