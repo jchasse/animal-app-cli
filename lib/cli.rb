@@ -1,49 +1,30 @@
 class CLI
 
-    def welcome
+    def self.welcome
         puts "\nWelcome!"
         self.run
     end
 
-    def run 
+    def self.run 
         puts "\nPlease enter the common name of any living thing:"
         input = gets.chomp
-        self.get_animal_tsn_by_common_name(input)
+        API.get_animal_tsn_by_common_name(input)
     end
 
-    def get_animal_tsn_by_common_name(input)
-        response = API.get_animal_tsn(input)
-        array = response["searchByCommonNameResponse"]['return']["commonNames"]
-
-        if array.class == Hash
-            hash = {common_name: array["commonName"], tsn: array["tsn"]}
-            Animal.new(hash)
-        elsif array == nil
-            invalid_response_common_name
-        else
-            array.each do |animal|    # area to discuss in the techical blog
-                hash = {common_name: animal["commonName"], tsn: animal["tsn"]}
-                Animal.new(hash)
-            end
-        end
-        self.list_animal_selection
-    end
-
-    def invalid_response_common_name
+    def self.invalid_response_common_name
         puts "\nInvalid input. Please make sure to input the common name, not scientific name."
         self.run
     end
 
-    def list_animal_selection
-        # future functionality to skip over if only 1 common name response
-        puts "\n"
+    def self.list_animal_selection
+        puts "\n" 
         Animal.all.each_with_index do |animal, index|
             puts "#{index+1}. #{animal.common_name}"
         end
         self.narrow_animal_selection
     end
 
-    def narrow_animal_selection
+    def self.narrow_animal_selection
         
         puts "\nPlease narrow your animal selection by entering the corresponding number:"
         input = gets.chomp
@@ -61,7 +42,7 @@ class CLI
         end
     end
 
-    def select_details(cn_select = "species",tsn_select)
+    def self.select_details(cn_select = "species",tsn_select)
 
         option_array = ["Scientific Name", "Full Hierarchy", "Publications"]
         
@@ -81,7 +62,7 @@ class CLI
         self.check_for_animal_data(detail_select, tsn_select)
     end
 
-    def check_for_animal_data(detail_select, tsn_select)
+    def self.check_for_animal_data(detail_select, tsn_select)
         if detail_select == "Scientific Name" && Animal.find_by_tsn(tsn_select).sci_name != nil
             self.animal_to_print(detail_select,tsn_select)
         elsif detail_select == "Full Hierarchy" && Animal.find_by_tsn(tsn_select).full_hier != nil
@@ -93,12 +74,12 @@ class CLI
         end
     end
 
-    def animal_to_print(detail_select,tsn_select)
+    def self.animal_to_print(detail_select,tsn_select)
         animal = Animal.find_by_tsn(tsn_select)
         self.print_selected_details(detail_select, animal)
     end
 
-    def get_animal_details(detail_select, tsn_select)
+    def self.get_animal_details(detail_select, tsn_select)
         response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
 
         if detail_select == "Scientific Name"
@@ -120,7 +101,7 @@ class CLI
         self.print_selected_details(detail_select, animal)
     end
 
-    def print_selected_details(detail_select, animal)
+    def self.print_selected_details(detail_select, animal)
         if detail_select == "Scientific Name"
             puts "\nScientific Name: #{animal.sci_name}"
         
@@ -156,10 +137,10 @@ class CLI
         else
             self.invalid_input
         end
-        what_next?(animal)
+        self.what_next?(animal)
     end
 
-    def what_next?(animal)
+    def self.what_next?(animal)
         puts "\nEnter 'more info', 'new search', 'show prior search' or 'exit'"
         input = gets.chomp
 
@@ -179,7 +160,7 @@ class CLI
         end
     end
 
-    def invalid_input
+    def self.invalid_input
         puts "\nInvalid input"
         sleep 1
     end

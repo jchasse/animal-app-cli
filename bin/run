@@ -1,6 +1,5 @@
-#!/usr/bin/env ruby  #=> 'sha-bang' execute everything below this in Ruby
+#!/usr/bin/env ruby
 
 require_relative '../config/environment.rb'
 
-cli =CLI.new  #=> could also do class method, but convention is instance method
-cli.welcome
+CLI.welcome 
