@@ -13,7 +13,7 @@ Running bundle install will set you up with the required gems including HTTParty
 Installing
 Navigate to github https://github.com/jchasse/animal-app-cli
 Fork and clone 
-In your terminal, run 'bundle install'
+In your terminal, type 'cd animal-app-cli' and 'bundle install'
 Enter bin/run to start the program
 
 Contributing

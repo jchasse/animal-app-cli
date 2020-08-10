@@ -1,6 +1,6 @@
 class Animal
 
-    attr_accessor :common_name, :tsn, :sci_name, :full_hier, :comment, :publications
+    attr_accessor :common_name, :tsn, :sci_name, :full_hier, :publications
 
     @@all = []
 

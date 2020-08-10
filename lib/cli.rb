@@ -7,7 +7,7 @@ class CLI
 
     def run 
         puts "\nPlease enter the common name of any living thing:"
-        input = gets.chomp
+        input = gets.chomp.downcase
         self.get_animal_tsn_by_common_name(input)
     end
 
@@ -21,7 +21,7 @@ class CLI
         elsif array == nil
             invalid_response_common_name
         else
-            array.each do |animal|    # area to discuss in the techical blog
+            array.each do |animal| 
                 hash = {common_name: animal["commonName"], tsn: animal["tsn"]}
                 Animal.new(hash)
             end
@@ -35,7 +35,6 @@ class CLI
     end
 
     def list_animal_selection
-        # future functionality to skip over if only 1 common name response
         puts "\n"
         Animal.all.each_with_index do |animal, index|
             puts "#{index+1}. #{animal.common_name}"
@@ -82,11 +81,11 @@ class CLI
     end
 
     def check_for_animal_data(detail_select, tsn_select)
-        if detail_select == "Scientific Name" && Animal.find_by_tsn(tsn_select).sci_name != nil
+        if detail_select == "Scientific Name" && Animal.find_by_tsn(tsn_select).sci_name
             self.animal_to_print(detail_select,tsn_select)
-        elsif detail_select == "Full Hierarchy" && Animal.find_by_tsn(tsn_select).full_hier != nil
+        elsif detail_select == "Full Hierarchy" && Animal.find_by_tsn(tsn_select).full_hier
             self.animal_to_print(detail_select,tsn_select)
-        elsif detail_select == "Publications" && Animal.find_by_tsn(tsn_select).publications != nil
+        elsif detail_select == "Publications" && Animal.find_by_tsn(tsn_select).publications
             self.animal_to_print(detail_select,tsn_select)
         else
             self.get_animal_details(detail_select, tsn_select)
@@ -161,10 +160,10 @@ class CLI
 
     def what_next?(animal)
         puts "\nEnter 'more info', 'new search', 'show prior search' or 'exit'"
-        input = gets.chomp
+        input = gets.chomp.downcase
 
         if input == "more info"
-            self.def select_details(animal.tsn)
+            self.select_details(animal.tsn)
         elsif input == "new search"
             Animal.clear
             self.run
