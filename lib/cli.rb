@@ -70,34 +70,12 @@ class CLI
         elsif detail_select == "Publications" && Animal.find_by_tsn(tsn_select).publications != nil
             self.animal_to_print(detail_select,tsn_select)
         else
-            self.get_animal_details(detail_select, tsn_select)
+            API.get_animal_details(detail_select, tsn_select)
         end
     end
 
     def self.animal_to_print(detail_select,tsn_select)
         animal = Animal.find_by_tsn(tsn_select)
-        self.print_selected_details(detail_select, animal)
-    end
-
-    def self.get_animal_details(detail_select, tsn_select)
-        response = API.get_animal_details_by_tsn(detail_select.gsub(" ", ""), tsn_select)
-
-        if detail_select == "Scientific Name"
-            value = response["getScientificNameFromTSNResponse"]["return"]["combinedName"]            
-            attributes = {sci_name: value}
-                
-        elsif detail_select == "Full Hierarchy"
-            value = response["getFullHierarchyFromTSNResponse"]["return"]["hierarchyList"]
-            attributes = {full_hier: value}
-
-        else  detail_select == "Publications"
-            value = response["getPublicationsFromTSNResponse"]["return"]["publications"]
-            attributes = {publications: value}
-        end
-
-        animal = Animal.find_by_tsn(tsn_select)
-        animal.assign_attributes(attributes)
-
         self.print_selected_details(detail_select, animal)
     end
 
